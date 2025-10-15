@@ -1,22 +1,17 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
-import { ProductCard } from '@/components/ProductCard';
-import { CollectionCard } from '@/components/CollectionCard';
-import { FloatingCart } from '@/components/FloatingCart';
-import { NewsletterSection } from '@/components/NewsletterSection';
-import { EcommerceTemplate } from '@/templates/EcommerceTemplate';
-import type { UseIndexLogicReturn } from '@/components/headless/HeadlessIndex';
-
-/**
- * EDITABLE UI - IndexUI
- * 
- * Interfaz completamente editable para la página principal.
- * El agente IA puede modificar colores, textos, layout, etc.
- */
+import { ProductCard } from '@/components/ProductCard'
+import { FloatingCart } from '@/components/FloatingCart'
+import { NewsletterSection } from '@/components/NewsletterSection'
+import { EcommerceTemplate } from '@/templates/EcommerceTemplate'
+import { HospitalBasketHero } from '@/components/HospitalBasketHero'
+import { NewbornChecklist } from '@/components/NewbornChecklist'
+import { CategoryShowcase } from '@/components/CategoryShowcase'
+import { HospitalPacksSection } from '@/components/HospitalPacksSection'
+import type { UseIndexLogicReturn } from '@/components/headless/HeadlessIndex'
+import { Button } from '@/components/ui/button'
+import { Heart } from 'lucide-react'
 
 interface IndexUIProps {
-  logic: UseIndexLogicReturn;
+  logic: UseIndexLogicReturn
 }
 
 export const IndexUI = ({ logic }: IndexUIProps) => {
@@ -28,55 +23,45 @@ export const IndexUI = ({ logic }: IndexUIProps) => {
     filteredProducts,
     handleViewCollectionProducts,
     handleShowAllProducts,
-  } = logic;
+  } = logic
 
   return (
-    <EcommerceTemplate 
-      showCart={true}
-    >
+    <EcommerceTemplate showCart={true}>
       {/* Hero Section */}
-      <section className="bg-background py-12 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Discover Our Products
-          </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Find the best products at the best price. Guaranteed quality and fast shipping.
-          </p>
-        </div>
-      </section>
+      <HospitalBasketHero />
 
-      {/* Collections Section */}
+      {/* Newborn Checklist */}
+      <NewbornChecklist />
+
+      {/* Category Showcase */}
       {!loadingCollections && collections.length > 0 && (
-        <section className="py-12 bg-muted/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-foreground mb-8">
-              Our Collections
-            </h2>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {collections.map((collection) => (
-                <CollectionCard 
-                  key={collection.id} 
-                  collection={collection} 
-                  onViewProducts={handleViewCollectionProducts} 
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+        <CategoryShowcase 
+          collections={collections}
+          onViewCollection={handleViewCollectionProducts}
+        />
       )}
 
-      {/* Products Section */}
-      <section className="py-12">
+      {/* Hospital Packs */}
+      <HospitalPacksSection />
+
+      {/* Featured Products Section */}
+      <section id="essentials-section" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-foreground">
-              {selectedCollectionId 
-                ? `Products from ${collections.find(c => c.id === selectedCollectionId)?.name || 'Collection'}` 
-                : 'Featured Products'
-              }
-            </h2>
+            <div>
+              <h2 className="text-3xl font-bold text-foreground mb-2">
+                {selectedCollectionId 
+                  ? `${collections.find(c => c.id === selectedCollectionId)?.name || 'Collection'}` 
+                  : 'Featured Essentials'
+                }
+              </h2>
+              <p className="text-muted-foreground">
+                {selectedCollectionId
+                  ? collections.find(c => c.id === selectedCollectionId)?.description
+                  : 'Handpicked essentials for your journey'
+                }
+              </p>
+            </div>
             {selectedCollectionId && (
               <Button 
                 variant="outline" 
@@ -102,10 +87,40 @@ export const IndexUI = ({ logic }: IndexUIProps) => {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                No products available.
+                No products available in this collection.
               </p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-16 bg-gradient-to-b from-baby-lavender to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <Heart className="h-12 w-12 text-primary mx-auto mb-4 fill-current" />
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Made with Love for New Parents
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Every product is carefully selected and tested by real parents. 
+              We understand what you need because we've been there too.
+            </p>
+            <div className="flex flex-wrap justify-center gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
+                <div className="text-muted-foreground">Happy Families</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-primary mb-2">4.9★</div>
+                <div className="text-muted-foreground">Average Rating</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-primary mb-2">24/7</div>
+                <div className="text-muted-foreground">Support</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -114,5 +129,5 @@ export const IndexUI = ({ logic }: IndexUIProps) => {
 
       <FloatingCart />
     </EcommerceTemplate>
-  );
-};
+  )
+}
